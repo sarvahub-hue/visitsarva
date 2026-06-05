@@ -105,6 +105,100 @@ DEMO_PROPERTIES = [
 ]
 
 
+DEMO_PROJECTS = [
+    {
+        "title": "Sarva Greenfield Towers",
+        "description": "A 24-storey premium residential development with 2/3/4 BHK apartments, set on 6 acres with 70% open space.",
+        "sector": "apartment",
+        "location": "Sarjapur Road",
+        "city": "Bangalore",
+        "price_range": "₹ 1.45 Cr — 3.20 Cr",
+        "area": "1,150 — 2,850 sqft",
+        "image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&auto=format&fit=crop&q=80",
+        "status": "new",
+        "builder": "Sarva Group",
+        "possession": "Dec 2027",
+        "rera_id": "KA/RERA/1251/473",
+        "is_featured": True,
+    },
+    {
+        "title": "Sarva Tech Park Phase II",
+        "description": "Grade-A IT office space with LEED Gold certification, 10 minutes from Bangalore International Airport.",
+        "sector": "commercial",
+        "location": "Devanahalli Business Park",
+        "city": "Bangalore",
+        "price_range": "₹ 14,500 / sqft",
+        "area": "5,000 — 50,000 sqft",
+        "image_url": "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=1200&auto=format&fit=crop&q=80",
+        "status": "new",
+        "builder": "Sarva Commercial",
+        "possession": "Aug 2026",
+        "rera_id": "KA/RERA/COM/2025/0084",
+        "is_featured": True,
+    },
+    {
+        "title": "Vanasthali Premium Plots",
+        "description": "DTCP-approved gated plotted development — 92 plots ranging 1800-4800 sqft, near upcoming metro line.",
+        "sector": "plot",
+        "location": "Devanahalli",
+        "city": "Bangalore",
+        "price_range": "₹ 78 L — 2.40 Cr",
+        "area": "1,800 — 4,800 sqft",
+        "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&auto=format&fit=crop&q=80",
+        "status": "new",
+        "builder": "Sarva Land",
+        "possession": "Ready",
+        "rera_id": "KA/RERA/PLT/2024/0298",
+        "is_featured": False,
+    },
+    {
+        "title": "Skyline Residences Hyderabad",
+        "description": "Iconic 35-storey residential tower in the heart of Jubilee Hills with sky deck and infinity pool.",
+        "sector": "residential",
+        "location": "Jubilee Hills",
+        "city": "Hyderabad",
+        "price_range": "₹ 4.20 Cr — 9.80 Cr",
+        "area": "3,200 — 6,400 sqft",
+        "image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&auto=format&fit=crop&q=80",
+        "status": "active",
+        "builder": "Skyline Developers",
+        "possession": "Phase 1 ready",
+        "rera_id": "TG/RERA/2024/00114",
+        "is_featured": True,
+    },
+    {
+        "title": "Sarva Logistics Park",
+        "description": "Built-to-suit warehousing and light-industrial complex on NH-44.",
+        "sector": "industrial",
+        "location": "Hosur Road",
+        "city": "Bangalore",
+        "price_range": "₹ 4,800 / sqft",
+        "area": "20,000 — 200,000 sqft",
+        "image_url": "https://images.unsplash.com/photo-1553413077-190dd305871c?w=1200&auto=format&fit=crop&q=80",
+        "status": "active",
+        "builder": "Sarva Industrial",
+        "possession": "Phased",
+        "rera_id": "KA/RERA/IND/2024/0011",
+        "is_featured": False,
+    },
+    {
+        "title": "Coorg Coffee Estates",
+        "description": "Productive coffee plantation parcels with bungalow build-rights. Heritage land, clear titles.",
+        "sector": "agriculture",
+        "location": "Madikeri Taluk",
+        "city": "Coorg",
+        "price_range": "₹ 95 L / acre",
+        "area": "1 — 12 acres",
+        "image_url": "https://images.unsplash.com/photo-1500076656116-558758c991c1?w=1200&auto=format&fit=crop&q=80",
+        "status": "active",
+        "builder": "Estate Trust",
+        "possession": "Ready",
+        "rera_id": "Land — RERA exempt",
+        "is_featured": False,
+    },
+]
+
+
 async def ensure_seed():
     # Admin
     existing = await db.users().find_one({"email": ADMIN_EMAIL})
@@ -185,3 +279,33 @@ async def ensure_seed():
                 "updated_at": now_iso(),
             }
             await db.properties().insert_one(doc)
+
+    # Hero (only if not set)
+    site = db.get_db()["site"]
+    if not await site.find_one({"key": "hero"}):
+        await site.insert_one(
+            {
+                "key": "hero",
+                "image_url": "https://images.unsplash.com/photo-1748063578185-3d68121b11ff?w=1920&auto=format&fit=crop&q=80",
+                "video_url": "",
+                "headline": "Find Your Dream Property. Zero Brokerage.",
+                "sub_headline": "Buy property, pay no brokerage. We connect you directly to verified sellers — every listing vetted by our team.",
+                "cta_text": "Explore Properties",
+                "cta_link": "/properties",
+                "updated_at": now_iso(),
+            }
+        )
+
+    # Projects (builder launches — separate from individual properties)
+    projects_col = db.get_db()["projects"]
+    if await projects_col.count_documents({}) == 0:
+        for p in DEMO_PROJECTS:
+            await projects_col.insert_one(
+                {
+                    **p,
+                    "id": new_id(),
+                    "created_at": now_iso(),
+                    "updated_at": now_iso(),
+                    "created_by": None,
+                }
+            )

@@ -11,8 +11,10 @@ import BuyerHome from "@/pages/BuyerHome";
 import SavedProperties from "@/pages/SavedProperties";
 import MyEnquiries from "@/pages/MyEnquiries";
 import Services from "@/pages/Services";
+import Construction from "@/pages/Construction";
 import SellerDashboard from "@/pages/SellerDashboard";
 import NewListing from "@/pages/NewListing";
+import ListingEdit from "@/pages/ListingEdit";
 import SellerEnquiries from "@/pages/SellerEnquiries";
 import AdminDashboard from "@/pages/AdminDashboard";
 import NotFound from "@/pages/NotFound";
@@ -29,6 +31,7 @@ function App() {
           <Route path="/properties" element={<PropertiesList />} />
           <Route path="/properties/:id" element={<PropertyDetail />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/construction" element={<Construction />} />
 
           {/* Buyer */}
           <Route
@@ -70,6 +73,14 @@ function App() {
             element={
               <RequireAuth roles={["seller", "admin"]}>
                 <NewListing />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/seller/listings/:id/edit"
+            element={
+              <RequireAuth roles={["seller", "admin"]}>
+                <ListingEdit />
               </RequireAuth>
             }
           />

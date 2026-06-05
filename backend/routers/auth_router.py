@@ -44,6 +44,13 @@ async def register(payload: UserRegister):
         "updated_at": now_iso(),
     }
     await db.users().insert_one(user)
+    # Welcome email (logs if no Resend key)
+    try:
+        from services.email import send_email, tpl_welcome
+        subject, html = tpl_welcome(user["name"], user["role"])
+        await send_email(user["email"], subject, html)
+    except Exception:
+        pass
     access = auth_utils.create_access_token(user["id"], user["role"])
     refresh = auth_utils.create_refresh_token(user["id"], user["role"])
     return {

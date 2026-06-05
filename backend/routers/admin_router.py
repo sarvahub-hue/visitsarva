@@ -5,6 +5,10 @@ import db
 import auth as auth_utils
 from models import VerifyDecision, RejectDecision, now_iso
 
+from routers.cms_router import push_notification
+from services.email import send_email, tpl_listing_status, tpl_new_enquiry
+import os
+
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 
@@ -77,6 +81,15 @@ async def verify_property(
     )
     if res.matched_count == 0:
         raise HTTPException(status_code=404, detail="Property not found")
+    prop = await db.properties().find_one({"id": pid}, {"_id": 0})
+    if prop:
+        seller = await db.users().find_one({"id": prop.get("listed_by")}, {"_id": 0})
+        if seller:
+            await push_notification(
+                seller["id"], "Listing published", f'{prop["title"]} is now live.', f'/properties/{pid}'
+            )
+            subject, html = tpl_listing_status(prop["title"], "published")
+            await send_email(seller["email"], subject, html)
     return {"ok": True, "status": "published"}
 
 
@@ -97,6 +110,18 @@ async def reject_property(
     )
     if res.matched_count == 0:
         raise HTTPException(status_code=404, detail="Property not found")
+    prop = await db.properties().find_one({"id": pid}, {"_id": 0})
+    if prop:
+        seller = await db.users().find_one({"id": prop.get("listed_by")}, {"_id": 0})
+        if seller:
+            await push_notification(
+                seller["id"],
+                "Listing needs revision",
+                f'{prop["title"]} was not approved. Reason: {payload.reason}',
+                "/seller/dashboard",
+            )
+            subject, html = tpl_listing_status(prop["title"], "rejected", payload.reason)
+            await send_email(seller["email"], subject, html)
     return {"ok": True, "status": "rejected"}
 
 

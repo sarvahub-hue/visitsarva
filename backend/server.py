@@ -20,6 +20,7 @@ from routers.admin_router import router as admin_router  # noqa: E402
 from routers.enquiries_router import router as enquiries_router  # noqa: E402
 from routers.services_router import router as services_router  # noqa: E402
 from routers.ai_router import router as ai_router  # noqa: E402
+from routers.cms_router import router as cms_router  # noqa: E402
 from seed import ensure_seed  # noqa: E402
 
 app = FastAPI(title="VisitSarva API")
@@ -37,6 +38,7 @@ app.include_router(admin_router)
 app.include_router(enquiries_router)
 app.include_router(services_router)
 app.include_router(ai_router)
+app.include_router(cms_router)
 
 app.add_middleware(
     CORSMiddleware,

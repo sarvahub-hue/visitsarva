@@ -119,6 +119,9 @@ const SellerDashboard = () => {
                     <Link to={`/properties/${p.id}`} className="btn-outline !py-2 !px-3">
                       View
                     </Link>
+                    <Link to={`/seller/listings/${p.id}/edit`} className="btn-outline !py-2 !px-3" data-testid={`edit-${p.id}`}>
+                      <Pencil size={14} />
+                    </Link>
                     <button onClick={() => remove(p.id)} className="btn-outline !py-2 !px-3 !text-[#c0392b]" data-testid={`delete-${p.id}`}>
                       <Trash2 size={14} />
                     </button>

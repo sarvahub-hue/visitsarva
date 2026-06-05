@@ -88,6 +88,9 @@ Rules:
 - `area.unit` MUST be one of: sqft, sqm, acre, cent, guntha.
 - Only fill fields you have confirmed information for. Leave the rest as empty string, 0, [], or {}.
 - Numbers as numbers (not strings). Booleans as true/false.
+- IMPORTANT — `title`: As soon as you know at least two of {category, bedrooms, locality, city, sub_category}, you MUST produce a non-empty draft `title` (e.g., "3 BHK Apartment in Whitefield, Bangalore" or "Commercial Office in HITEC City, Hyderabad"). Improve it on subsequent turns as you learn more. Never leave `title` empty if you can infer ANY reasonable title from the conversation so far.
+- IMPORTANT — `description`: As soon as you have 2-3 facts about the property, produce a 1-2 sentence draft description. The seller can edit later. Never leave `description` empty if any details have been shared.
+- Re-emit ALL fields you have confirmed in EVERY turn (not just the new ones). Carry forward known values from the prior conversation.
 """
 
 

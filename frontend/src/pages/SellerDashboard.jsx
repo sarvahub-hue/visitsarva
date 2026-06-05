@@ -135,11 +135,17 @@ const SellerDashboard = () => {
 };
 
 const Stat = ({ label, value, accent }) => (
-  <div className={`card p-4 ${accent ? "bg-[#0D7A6B] text-white border-[#0D7A6B]" : ""}`}>
-    <div className={`text-xs uppercase tracking-wider ${accent ? "text-white/80" : "text-[#5b6371]"}`}>
+  <div
+    className={
+      accent
+        ? "p-4 rounded-lg overflow-hidden bg-[#0D7A6B] text-white border border-[#0D7A6B]"
+        : "card p-4"
+    }
+  >
+    <div className={`text-xs uppercase tracking-wider ${accent ? "text-white/85" : "text-[#5b6371]"}`}>
       {label}
     </div>
-    <div className={`font-display text-3xl font-bold mt-1 ${accent ? "" : "text-[#0F2340]"}`}>
+    <div className={`font-display text-3xl font-bold mt-1 ${accent ? "text-white" : "text-[#0F2340]"}`}>
       {value}
     </div>
   </div>

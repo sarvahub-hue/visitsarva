@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import api from "@/api/client";
+import MapPicker from "@/components/MapPicker";
 import { PROPERTY_CATEGORIES } from "@/utils/format";
 
 const AREA_UNITS = ["sqft", "sqm", "acre", "cent", "guntha"];
@@ -159,6 +160,14 @@ const ListingEdit = () => {
             <Field label="State"><input className="input-field" value={form.location.state} onChange={setLoc("state")} /></Field>
             <Field label="Pincode"><input className="input-field" value={form.location.pincode} onChange={setLoc("pincode")} /></Field>
           </Row>
+          <div>
+            <label className="label">Drop a pin (click on the map)</label>
+            <MapPicker
+              lat={form.location.lat}
+              lng={form.location.lng}
+              onChange={(lat, lng) => setForm((s) => ({ ...s, location: { ...s.location, lat, lng } }))}
+            />
+          </div>
         </Block>
 
         <Block title="Amenities & Features">

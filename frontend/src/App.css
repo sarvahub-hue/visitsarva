@@ -1,5 +1,4 @@
 .App {
     min-height: 100vh;
-    background: var(--sb-bg);
-    color: var(--sb-text);
+    background: var(--vs-bg);
 }

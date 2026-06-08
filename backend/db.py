@@ -11,7 +11,11 @@ _db = None
 def get_db():
     global _client, _db
     if _db is None:
-        _client = AsyncIOMotorClient(os.environ["MONGO_URL"])
+        _client = AsyncIOMotorClient(
+            os.environ["MONGO_URL"],
+            tls=True,
+            tlsAllowInvalidCertificates=True
+    )
         _db = _client[os.environ["DB_NAME"]]
     return _db
 
